@@ -1,114 +1,109 @@
 import React, { Component } from 'react';
 import './App.css';
-import GuestList from './GuestList';
+
+import Header from './Header';
+import Main from './MainContent';
+
+const uuidv1 = require('uuid/v1');
 
 class App extends Component {
 
   state = {
     isFiltered: false,
     pendingGuest: "",
-    guests: [
-      {
-        name: 'Maya',
-        isConfirmed: false,
-        isEditing: false
-      },
-      {
-        name: 'Taliyah',
-        isConfirmed: false,
-        isEditing: false
-      },
-      {
-        name: 'Lana',
-        isConfirmed: true,
-        isEditing: false
-      }
-    ]
+    guests: []
   }
 
-  // "At" naming convention: used as it is realted to a single index
-  // callback which reverses isconfirmed state of guest
-  toggleGuestPropertyAt = (property, indexChange) =>
+  toggleGuestProperty = (property, id) =>
     this.setState({
-      guests: this.state.guests.map((guests, index) => {
-        if (index === indexChange) {
+      guests: this.state.guests.map(guest => {
+        if (guest.id === id) {
           return {
-            ...guests,
-            [property]: !guests[property]
-          }
+            ...guest,
+            [property]: !guest[property]
+          };
         }
-        return guests;
+        return guest;
       })
     });
 
-  toggleConfirmationAt = index => this.toggleGuestPropertyAt('isConfirmed', index);
+  toggleConfirmation = id =>
+    this.toggleGuestProperty('isConfirmed', id);
 
-  toggleEditingAt = index => this.toggleGuestPropertyAt('isEditing', index);
-
-  SetNameAt = (name, indexChange) =>
+  removeGuest = id =>
     this.setState({
-      guests: this.state.guests.map((guests, index) => {
-        if (index === indexChange) {
+      guests: this.state.guests.filter(guest => guest.id !== id)
+    });
+
+  toggleEditing = id =>
+    this.toggleGuestProperty('isEditing', id);
+
+  setName = (name, id) =>
+    this.setState({
+      guests: this.state.guests.map(guest => {
+        if (guest.id === id) {
           return {
-            ...guests,
+            ...guest,
             name
-          }
+          };
         }
-        return guests;
+        return guest;
       })
     });
 
   toggleFilter = () =>
     this.setState({ isFiltered: !this.state.isFiltered });
 
+  handleNameInput = (e) => {
+    this.setState({ pendingGuest: e.target.value })
+  };
+
+  addNewGuest = e => {
+    e.preventDefault();
+    this.setState({
+      guests: [
+        {
+          id: uuidv1(),
+          name: this.state.pendingGuest,
+          isConfirmed: false,
+          isEditing: false
+        },
+        ...this.state.guests
+      ],
+      pendingGuest: ''
+    });
+  };
+
   getTotalInvited = () => this.state.guests.length;
 
-  getConfirmed = () => this.state.guests.filter(guest => guest.isConfirmed === true);
+  getConfirmed = () =>
+    this.state.guests.reduce(
+      (total, guest) => guest.isConfirmed ? total + 1 : total, 0);
 
   render() {
+    const totalInvited = this.getTotalInvited();
+    const numberAttending = this.getConfirmed();
+    const numberUnconfirmed = totalInvited - numberAttending;
     return (
       <div className="App">
-        <header>
-          <h1>RSVP</h1>
-          <p>React Practice App</p>
-          <form>
-              <input type="text" value="Safia" placeholder="Invite Someone" />
-              <button type="submit" name="submit" value="submit">Submit</button>
-          </form>
-        </header>
-        <div className="main">
-          <div>
-            <h2>Invitees</h2>
-            <label>
-              <input type="checkbox"
-                onChange={this.toggleFilter}
-                checked={this.state.isFiltered}/> Hide those who haven't responded
-            </label>
-          </div>
-          <table className="counter">
-            <tbody>
-              <tr>
-                <td>Attending:</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <td>Unconfirmed:</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>Total:</td>
-                <td>3</td>
-              </tr>
-            </tbody>
-          </table>
 
-          <GuestList
-            guests={this.state.guests}
-            toggleConfirmationAt={this.toggleConfirmationAt}
-            toggleEditingAt={this.toggleEditingAt}
-            setNameAt={this.setNameAt}
-            isFiltered={this.state.isFiltered} />
-        </div>
+        <Header
+          addNewGuest={this.addNewGuest}
+          handleNameInput={this.handleNameInput}
+          pendingGuest={this.state.pendingGuest}/>
+
+        <Main
+          toggleFilter={this.toggleFilter}
+          isFiltered={this.state.isFiltered}
+          totalInvited={totalInvited}
+          numberAttending={numberAttending}
+          numberUnconfirmed={numberUnconfirmed}
+          guests={this.state.guests}
+          toggleConfirmation={this.toggleConfirmation}
+          toggleEditing={this.toggleEditing}
+          setName={this.setName}
+          removeGuest={this.removeGuest}
+          pendingGuest={this.state.pendingGuest}/>
       </div>
     );
   }

@@ -10,7 +10,6 @@ const GuestName = props => {
         onChange={props.handleNameEdits} />
     );
   }
-
   return (
     <span>
       {props.children}
