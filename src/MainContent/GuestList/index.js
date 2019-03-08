@@ -24,11 +24,11 @@ const GuestList = props =>
 
 GuestList.propTypes = {
   guests: PropTypes.array.isRequired,
-  toggleConfirmationAt: PropTypes.func.isRequired,
-  toggleEditingAt: PropTypes.func.isRequired,
-  setNameAt: PropTypes.func.isRequired,
+  toggleConfirmation: PropTypes.func.isRequired,
+  toggleEditing: PropTypes.func.isRequired,
+  setName: PropTypes.func.isRequired,
   isFiltered: PropTypes.bool.isRequired,
-  removeGuestAt: PropTypes.func.isRequired,
+  removeGuest: PropTypes.func.isRequired,
   pendingGuest: PropTypes.string.isRequired
 }
 

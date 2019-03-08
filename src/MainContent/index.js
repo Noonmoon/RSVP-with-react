@@ -29,8 +29,8 @@ const Main = props =>
 
 Main.propTypes = {
   numberAttending: PropTypes.number,
-  numberAttending: PropTypes.number,
-  numberAttending: PropTypes.number,
+  numberUncomfirmed: PropTypes.number,
+  totalInvited: PropTypes.number,
   guests: PropTypes.array.isRequired,
   toggleConfirmation: PropTypes.func.isRequired,
   toggleEditing: PropTypes.func.isRequired,

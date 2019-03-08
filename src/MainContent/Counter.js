@@ -21,8 +21,8 @@ const Counter = props =>
 
 Counter.propTypes = {
   numberAttending: PropTypes.number,
-  numberAttending: PropTypes.number,
-  numberAttending: PropTypes.number
+  numberUncomfirmed: PropTypes.number,
+  totalInvited: PropTypes.number
 }
 
 export default Counter;

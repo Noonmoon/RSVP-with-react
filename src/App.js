@@ -41,6 +41,7 @@ class App extends Component {
   setName = (name, id) =>
     this.setState({
       guests: this.state.guests.map(guest => {
+        console.log('afabdhsfkas')
         if (guest.id === id) {
           return {
             ...guest,
